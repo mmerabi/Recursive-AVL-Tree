@@ -1,2 +1,2 @@
 # prog2
-Project 2
+CSUN 282 Project #2
