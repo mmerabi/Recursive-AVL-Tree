@@ -84,7 +84,7 @@ class StringAVLTree {
         return Replacet;
     }
 
-    // Rotate the node to the left ===============
+    // Rotate the node to the left ======DONE=========
     private static StringAVLNode rotateLeft(StringAVLNode t) {
         StringAVLNode Replacet;
         StringAVLNode PHNode;  //Placeholder Node
@@ -138,54 +138,53 @@ class StringAVLTree {
             balCount = 0;
         } else if (t.getBalance() == 0) {
             balCount = balancedRecursive(t.getLeft()) + balancedRecursive(t.getRight()) + 1;
-        } else {
+        } else { //checking by going through three cases and adding recursively of left then right
             balCount = balancedRecursive(t.getLeft()) + balancedRecursive(t.getRight());
         }
         return balCount;
     }
     // Return the in order successor or null if there is none or str is not in the tree
     public String successor(String str) {
-        StringAVLNode PrevNode=null; //save bottom node
+        StringAVLNode firstNode=null; //save bottom node
 
         //check to make sure it isn't null
         if(root==null){
             return null;
         }
-        return successor(str, root, PrevNode);
+        return successor(str, root, firstNode);
     }
 
     //Real Successor Method
-    private String successor(String string, StringAVLNode parent, StringAVLNode PrevNode) {
-        StringAVLNode BufferNode; //holding node
-        String BufferString = "";
+    //third node to easily save node when string is found at bottom
+    private String successor(String string, StringAVLNode parent, StringAVLNode firstNode) {
+        StringAVLNode PHNode; //holding node
+        String tstring = ""; //testing string
 
         if (parent == null) {//Case for null node
-            BufferString = null;
+            tstring = null;
         }
-        //Else if to compare the string to the Test String
+        //Checking by comparing String to find match
         else if (string.compareTo(parent.getItem()) == 0) {
             if (parent.getRight() != null) {
-                BufferNode = parent.getRight();
-                while (BufferNode.getLeft() != null) {
-                    BufferNode = BufferNode.getLeft();
+                PHNode = parent.getRight();
+                while (PHNode.getLeft() != null) {
+                	//continue going down tree till null to test
+                    PHNode = PHNode.getLeft();
                 }
-                BufferString = BufferNode.getItem();
-            } else if (PrevNode == null) {
-                BufferString = null;
-            }
-            else{
-                BufferString=PrevNode.getItem();//
-            }
+              tstring = PHNode.getItem();
+            } else if (firstNode == null) {
+                tstring = null;
+            } else {
+                tstring=firstNode.getItem();
+            	}
         }
-        //Set buffer String equal to successor in the
+        //Set test string equal to successor
         else if(string.compareTo(parent.getItem())<0){
-            BufferString=successor(string ,parent.getLeft(),parent);
-        }
-        //Set buffer String equal to successor in the
-        else{
-            BufferString=successor(string,parent.getRight(),PrevNode);
-        }
-        return BufferString;
+            tstring=successor(string ,parent.getLeft(),parent);
+        } else {
+            tstring=successor(string,parent.getRight(),firstNode);
+        	}
+        return tstring;
     }
 
     public void insert(String str) {
@@ -199,15 +198,15 @@ class StringAVLTree {
 
         if (t == null) { // if root is null, this is the first node
             t = new StringAVLNode(str);
+            t.setBalance(0);
         }
 
         //t is already in the tree
-        else if (t.getItem().compareTo(str) > 0) {
+        else if (t.getItem().compareTo(str) > 0) { //left insert
             if (t.getLeft() != null) { //in case it is null
                 startbal = t.getLeft().getBalance();//save bal before
                 t.setLeft(insert(str, t.getLeft())); //adding to the left side
                 endbal = t.getLeft().getBalance();//save bal after
-                //       System.out.println("t.compare > 0 has activated");
 
                 if (startbal == 0 && endbal != 0) {
                     t.setBalance(t.getBalance() - 1);
@@ -215,33 +214,30 @@ class StringAVLTree {
             } else {
                 t.setLeft(insert(str, t.getLeft()));
                 t.setBalance(t.getBalance() - 1);
-            }
-        }
-        else {
-            if (t.getRight() != null) {
+            	}
+        } else {
+            if (t.getRight() != null) { //right insert
                 startbal = t.getRight().getBalance();
                 t.setRight(insert(str, t.getRight())); // adding to the right side
                 endbal = t.getRight().getBalance();
-                //    System.out.println("t.compare < 0 has activated");
 
                 if (startbal == 0 && endbal != 0) {
                     t.setBalance(t.getBalance() + 1);
                 }
-            }
-            else {
+            } else {
                 t.setRight(insert(str, t.getRight()));
                 t.setBalance(t.getBalance() + 1);
             }
         }
         // Once node has been inserted and balance checked
-        // Check to see if rotations are needed
+        // Checks to see if rotations are needed
         if (t.getBalance() == 2 || t.getBalance() == -2) {
             if (t.getBalance() == 2) { // right heavy case
                 if (t.getRight().getBalance() < 0) { //requires double rotation
                     insbal = t.getRight().getLeft().getBalance();
                     t.setRight(rotateRight(t.getRight()));
                     t = rotateLeft(t);
-                    if (insbal == 0) {
+                    if (insbal == 0) { //equalized parent+Child
                         t.setBalance(0);
                         t.getRight().setBalance(0);
                         t.getLeft().setBalance(0);
@@ -254,7 +250,7 @@ class StringAVLTree {
                         t.getLeft().setBalance(0);
                         t.getRight().setBalance(1);
                     }
-                } else {
+                } else { //normal left rotate
                     t = rotateLeft(t);
                     t.setBalance(0);
                     t.getLeft().setBalance(0);
@@ -286,7 +282,6 @@ class StringAVLTree {
             }
         }
         // end of rotations
-        // end of insert
         return t;
     } // end of insert
 
