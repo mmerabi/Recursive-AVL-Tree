@@ -71,7 +71,6 @@ class StringAVLTree {
     public StringAVLTree() {
         this.root = null;
     }
-
     // Rotate the node to the right ========= DONE ============
     private static StringAVLNode rotateRight(StringAVLNode t) {
         StringAVLNode Replacet;
@@ -200,44 +199,40 @@ class StringAVLTree {
 
         if (t == null) { // if root is null, this is the first node
             t = new StringAVLNode(str);
-            t.setBalance(0);
-            System.out.println("First node in tree added \n");
+        }
 
-        } else {
-            if (t.getItem() == str) {
-                System.out.println("This node is already in the tree \n");
-                //t is already in the tree
+        //t is already in the tree
+        else if (t.getItem().compareTo(str) > 0) {
+            if (t.getLeft() != null) { //in case it is null
+                startbal = t.getLeft().getBalance();//save bal before
+                t.setLeft(insert(str, t.getLeft())); //adding to the left side
+                endbal = t.getLeft().getBalance();//save bal after
+                //       System.out.println("t.compare > 0 has activated");
 
-            } else if (t.getItem().compareTo(str) > 0) {
-                if (t.getLeft() != null) { //in case it is null
-                    startbal = t.getLeft().getBalance();//save bal before
-                    t.setLeft(insert(str, t.getLeft())); //adding to the left side
-                    endbal = t.getLeft().getBalance();//save bal after
-
-                    if (startbal == 0 && endbal != 0) {
-                        t.setBalance(t.getBalance() - 1);
-                    }
-                } else {
-                    startbal = t.getBalance();
-                    t.setLeft(insert(str, t.getLeft()));
+                if (startbal == 0 && endbal != 0) {
                     t.setBalance(t.getBalance() - 1);
                 }
             } else {
-                if (t.getRight() != null) {
-                    startbal = t.getRight().getBalance();
-                    t.setRight(insert(str, t.getRight())); // adding to the right side
-                    endbal = t.getRight().getBalance();
+                t.setLeft(insert(str, t.getLeft()));
+                t.setBalance(t.getBalance() - 1);
+            }
+        }
+        else {
+            if (t.getRight() != null) {
+                startbal = t.getRight().getBalance();
+                t.setRight(insert(str, t.getRight())); // adding to the right side
+                endbal = t.getRight().getBalance();
+                //    System.out.println("t.compare < 0 has activated");
 
-                    if (startbal == 0 && endbal != 0) {
-                        t.setBalance(t.getBalance() + 1);
-                    }
-                } else {
-                    t.setRight(insert(str, t.getRight()));
+                if (startbal == 0 && endbal != 0) {
                     t.setBalance(t.getBalance() + 1);
-                    }
                 }
             }
-
+            else {
+                t.setRight(insert(str, t.getRight()));
+                t.setBalance(t.getBalance() + 1);
+            }
+        }
         // Once node has been inserted and balance checked
         // Check to see if rotations are needed
         if (t.getBalance() == 2 || t.getBalance() == -2) {
@@ -254,7 +249,7 @@ class StringAVLTree {
                         t.setBalance(0);
                         t.getRight().setBalance(0);
                         t.getLeft().setBalance(-1);
-                    } else if (insbal == -1){
+                    } else if (insbal == -1) {
                         t.setBalance(0);
                         t.getLeft().setBalance(0);
                         t.getRight().setBalance(1);
@@ -264,33 +259,35 @@ class StringAVLTree {
                     t.setBalance(0);
                     t.getLeft().setBalance(0);
                 }
-            }
-            if (t.getLeft().getBalance() > 0) {
-                insbal = t.getLeft().getRight().getBalance();
-                t.setLeft(rotateLeft(t.getLeft()));
-                t = rotateRight(t);
-
-                if (insbal == 0) {
-                    t.setBalance(0);
-                    t.getRight().setBalance(0);
-                    t.getLeft().setBalance(0);
-                } else if (insbal == 1) {
-                    t.setBalance(0);
-                    t.getRight().setBalance(0);
-                    t.getLeft().setBalance(-1);
-                } else if (insbal == -1) {
-                    t.setBalance(0);
-                    t.getLeft().setBalance(0);
-                    t.getRight().setBalance(1);
-                }
             } else {
-                t = rotateRight(t);
-                t.setBalance(0);
-                t.getRight().setBalance(0);
+                if (t.getLeft().getBalance() > 0) {
+                    insbal = t.getLeft().getRight().getBalance();
+                    t.setLeft(rotateLeft(t.getLeft()));
+                    t = rotateRight(t);
+
+                    if (insbal == 0) {
+                        t.setBalance(0);
+                        t.getRight().setBalance(0);
+                        t.getLeft().setBalance(0);
+                    } else if (insbal == 1) {
+                        t.setBalance(0);
+                        t.getRight().setBalance(0);
+                        t.getLeft().setBalance(-1);
+                    } else if (insbal == -1) {
+                        t.setBalance(0);
+                        t.getLeft().setBalance(0);
+                        t.getRight().setBalance(1);
+                    }
+                } else {
+                    t = rotateRight(t);
+                    t.setBalance(0);
+                    t.getRight().setBalance(0);
                 }
+            }
         }
-     // end of rotations
-    return t;
+        // end of rotations
+        // end of insert
+        return t;
     } // end of insert
 
     public static String myName() {
