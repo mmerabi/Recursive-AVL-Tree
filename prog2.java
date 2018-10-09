@@ -8,7 +8,7 @@
 //Getters and setters, constructors
 class StringAVLNode {
     private String item;
-    private int balance;
+    private int balance = 0;
     private StringAVLNode left, right;
 
     public StringAVLNode(String str) {
@@ -39,7 +39,7 @@ class StringAVLNode {
     }
 
     public StringAVLNode getRight() {
-        return left;
+        return right;
     }
 
     public void setRight(StringAVLNode pt) {
@@ -191,6 +191,7 @@ class StringAVLTree {
         root = insert(str, root);
     }
 
+
     private StringAVLNode insert(String str, StringAVLNode t) {
         int startbal; //before adjusting
         int endbal; //after adjusting (comparison
@@ -214,7 +215,7 @@ class StringAVLTree {
             } else {
                 t.setLeft(insert(str, t.getLeft()));
                 t.setBalance(t.getBalance() - 1);
-            	}
+            }
         } else if (str.compareTo(t.getItem()) > 0) {
             if (t.getRight() != null) { //right insert
                 startbal = t.getRight().getBalance();
@@ -228,62 +229,61 @@ class StringAVLTree {
                 t.setRight(insert(str, t.getRight()));
                 t.setBalance(t.getBalance() + 1);
             }
-        // Once node has been inserted and balance checked
-        // Checks to see if rotations are needed
-        if (t.getBalance() == 2 || t.getBalance() == -2) {
-            if (t.getBalance() == 2) { // right heavy case
-                if (t.getRight().getBalance() < 0) { //requires double rotation
-                    insbal = t.getRight().getLeft().getBalance();
-                    t.setRight(rotateRight(t.getRight()));
-                    t = rotateLeft(t);
-                    }
-                	else if (insbal == 0) { //equalized parent+Child
-                        t.setBalance(0);
-                        t.getRight().setBalance(0);
-                        t.getLeft().setBalance(0);
-                    } else if (insbal == 1) {
-                        t.setBalance(0);
-                        t.getRight().setBalance(0);
-                        t.getLeft().setBalance(-1);
-                    } else if (insbal == -1) {
-                        t.setBalance(0);
-                        t.getLeft().setBalance(0);
-                        t.getRight().setBalance(1);
-                    }
-                } else { //normal left rotate
-                    t = rotateLeft(t);
-                    t.setBalance(0);
-                    t.getLeft().setBalance(0);
-                }
-            } else {
-                if (t.getLeft().getBalance() > 0) {
-                    insbal = t.getLeft().getRight().getBalance();
-                    t.setLeft(rotateLeft(t.getLeft()));
-                    t = rotateRight(t);
-
-                    if (insbal == 0) {
-                        t.setBalance(0);
-                        t.getRight().setBalance(0);
-                        t.getLeft().setBalance(0);
-                    } else if (insbal == 1) {
-                        t.setBalance(0);
-                        t.getRight().setBalance(0);
-                        t.getLeft().setBalance(-1);
-                    } else if (insbal == -1) {
+        }
+            // Once node has been inserted and balance checked
+            // Checks to see if rotations are needed
+            if (t.getBalance() == 2 || t.getBalance() == -2) {
+                if (t.getBalance() == 2) { // right heavy case
+                    if (t.getRight().getBalance() < 0) { //requires double rotation
+                        insbal = t.getRight().getLeft().getBalance();
+                        t.setRight(rotateRight(t.getRight()));
+                        t = rotateLeft(t);
+                        if (insbal == 0) { //equalized parent+Child
+                            t.setBalance(0);
+                            t.getRight().setBalance(0);
+                            t.getLeft().setBalance(0);
+                        } else if (insbal == 1) {
+                            t.setBalance(0);
+                            t.getRight().setBalance(0);
+                            t.getLeft().setBalance(-1);
+                        } else if (insbal == -1) {
+                            t.setBalance(0);
+                            t.getLeft().setBalance(0);
+                            t.getRight().setBalance(1);
+                        }
+                    } else { //normal left rotate
+                        t = rotateLeft(t);
                         t.setBalance(0);
                         t.getLeft().setBalance(0);
-                        t.getRight().setBalance(1);
                     }
                 } else {
-                    t = rotateRight(t);
-                    t.setBalance(0);
-                    t.getRight().setBalance(0);
+                    if (t.getLeft().getBalance() > 0) {
+                        insbal = t.getLeft().getRight().getBalance();
+                        t.setLeft(rotateLeft(t.getLeft()));
+                        t = rotateRight(t);
+
+                        if (insbal == 0) {
+                            t.setBalance(0);
+                            t.getRight().setBalance(0);
+                            t.getLeft().setBalance(0);
+                        } else if (insbal == 1) {
+                            t.setBalance(0);
+                            t.getRight().setBalance(0);
+                            t.getLeft().setBalance(-1);
+                        } else if (insbal == -1) {
+                            t.setBalance(0);
+                            t.getLeft().setBalance(0);
+                            t.getRight().setBalance(1);
+                        }
+                    } else {
+                        t = rotateRight(t);
+                        t.setBalance(0);
+                        t.getRight().setBalance(0);
+                    }
                 }
             }
-        }
         return t;
-        }
-        
+    } 
    
    // end of rotations
   // end of insert
@@ -405,8 +405,9 @@ class StringAVLTree {
                 else {
                     System.out.println("   *** NO MATCH ***   ");
                     System.out.println(t.toString2());
+                    System.out.println(ans[ansct]);
                 }
-                t.display(); System.out.println();
+                //t.display(); System.out.println();
                 ansct++;
             }
         } while (s.length() != 0);
