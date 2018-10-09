@@ -78,9 +78,9 @@ class StringAVLTree {
 
         Replacet = t.getLeft();
         PHNode = Replacet.getRight();
+        
         Replacet.setRight(t);
-        t.setLeft(PHNode);  // Complete rotation
-
+        t.setLeft(PHNode);
         return Replacet;
     }
 
@@ -88,12 +88,12 @@ class StringAVLTree {
     private static StringAVLNode rotateLeft(StringAVLNode t) {
         StringAVLNode Replacet;
         StringAVLNode PHNode;  //Placeholder Node
-
+        
         Replacet = t.getRight();
         PHNode = Replacet.getLeft();
+        
         Replacet.setLeft(t);
-        t.setRight(PHNode); //Completes the rotation
-
+        t.setRight(PHNode);
         return Replacet;
     }
 
@@ -202,7 +202,7 @@ class StringAVLTree {
         }
 
         //t is already in the tree
-        else if (t.getItem().compareTo(str) > 0) { //left insert
+        else if ( str.compareTo(t.getItem()) < 0 ) { //left insert
             if (t.getLeft() != null) { //in case it is null
                 startbal = t.getLeft().getBalance();//save bal before
                 t.setLeft(insert(str, t.getLeft())); //adding to the left side
@@ -215,7 +215,7 @@ class StringAVLTree {
                 t.setLeft(insert(str, t.getLeft()));
                 t.setBalance(t.getBalance() - 1);
             	}
-        } else {
+        } else if (str.compareTo(t.getItem()) > 0) {
             if (t.getRight() != null) { //right insert
                 startbal = t.getRight().getBalance();
                 t.setRight(insert(str, t.getRight())); // adding to the right side
@@ -228,7 +228,6 @@ class StringAVLTree {
                 t.setRight(insert(str, t.getRight()));
                 t.setBalance(t.getBalance() + 1);
             }
-        }
         // Once node has been inserted and balance checked
         // Checks to see if rotations are needed
         if (t.getBalance() == 2 || t.getBalance() == -2) {
@@ -237,7 +236,8 @@ class StringAVLTree {
                     insbal = t.getRight().getLeft().getBalance();
                     t.setRight(rotateRight(t.getRight()));
                     t = rotateLeft(t);
-                    if (insbal == 0) { //equalized parent+Child
+                    }
+                	else if (insbal == 0) { //equalized parent+Child
                         t.setBalance(0);
                         t.getRight().setBalance(0);
                         t.getLeft().setBalance(0);
@@ -281,9 +281,12 @@ class StringAVLTree {
                 }
             }
         }
-        // end of rotations
         return t;
-    } // end of insert
+        }
+        
+   
+   // end of rotations
+  // end of insert
 
     public static String myName() {
         return "Michael Merabi";
