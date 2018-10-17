@@ -1,7 +1,3 @@
-//Michael Merabi  -  ID# 109481201
-//CS282 - Tuesday/Thursday Class
-//Assignment #2   -  Assignment turned in on: 10/09/18
-
 /* This is a project that contains an AVL tree and can traverse the tree in many different ways
  * including finding height, balancing and insert and finding leaf counts*/
 
@@ -47,7 +43,6 @@ class StringAVLNode {
     }
 
     public int height() { // Calculate height through the root recursively
-        //per professor Wiegly's recommendation
 
         int lh = 0; // left height
         int rh = 0; //right height
@@ -71,33 +66,33 @@ class StringAVLTree {
     public StringAVLTree() {
         this.root = null;
     }
-    // Rotate the node to the right ========= DONE ============
+    // Rotate the node to the right
     private static StringAVLNode rotateRight(StringAVLNode t) {
         StringAVLNode Replacet;
         StringAVLNode PHNode; //Placeholder Node
 
         Replacet = t.getLeft();
         PHNode = Replacet.getRight();
-        
+
         Replacet.setRight(t);
         t.setLeft(PHNode);
         return Replacet;
     }
 
-    // Rotate the node to the left ======DONE=========
+    // Rotate the node to the left
     private static StringAVLNode rotateLeft(StringAVLNode t) {
         StringAVLNode Replacet;
         StringAVLNode PHNode;  //Placeholder Node
-        
+
         Replacet = t.getRight();
         PHNode = Replacet.getLeft();
-        
+
         Replacet.setLeft(t);
         t.setRight(PHNode);
         return Replacet;
     }
 
-    //--------DONE ------------
+
     public int height() {
         if (root == null)
             return 0;
@@ -105,7 +100,6 @@ class StringAVLTree {
             return root.height();
     }
 
-    // ------------DONE ----------------
     public int leafCt() { // public method calls private recursive leafRecursive
         StringAVLNode leafCt = root;
         return leafRecursive(leafCt);
@@ -125,7 +119,6 @@ class StringAVLTree {
         return recursiveCt;
     }
 
-    // // ------------DONE ----------------
     public int balanced() { // return number of balanced AVL nodes by calling recursive balance
         int balanceHolder;
         balanceHolder = balancedRecursive(root);
@@ -168,22 +161,22 @@ class StringAVLTree {
             if (parent.getRight() != null) {
                 PHNode = parent.getRight();
                 while (PHNode.getLeft() != null) {
-                	//continue going down tree till null to test
+                    //continue going down tree till null to test
                     PHNode = PHNode.getLeft();
                 }
-              tstring = PHNode.getItem();
+                tstring = PHNode.getItem();
             } else if (firstNode == null) {
                 tstring = null;
             } else {
                 tstring=firstNode.getItem();
-            	}
+            }
         }
         //Set test string equal to successor
         else if(string.compareTo(parent.getItem())<0){
             tstring=successor(string ,parent.getLeft(),parent);
         } else {
             tstring=successor(string,parent.getRight(),firstNode);
-        	}
+        }
         return tstring;
     }
 
@@ -230,67 +223,61 @@ class StringAVLTree {
                 t.setBalance(t.getBalance() + 1);
             }
         }
-            // Once node has been inserted and balance checked
-            // Checks to see if rotations are needed
-            if (t.getBalance() == 2 || t.getBalance() == -2) {
-                if (t.getBalance() == 2) { // right heavy case
-                    if (t.getRight().getBalance() < 0) { //requires double rotation
-                        insbal = t.getRight().getLeft().getBalance();
-                        t.setRight(rotateRight(t.getRight()));
-                        t = rotateLeft(t);
-                        if (insbal == 0) { //equalized parent+Child
-                            t.setBalance(0);
-                            t.getRight().setBalance(0);
-                            t.getLeft().setBalance(0);
-                        } else if (insbal == 1) {
-                            t.setBalance(0);
-                            t.getRight().setBalance(0);
-                            t.getLeft().setBalance(-1);
-                        } else if (insbal == -1) {
-                            t.setBalance(0);
-                            t.getLeft().setBalance(0);
-                            t.getRight().setBalance(1);
-                        }
-                    } else { //normal left rotate
-                        t = rotateLeft(t);
-                        t.setBalance(0);
-                        t.getLeft().setBalance(0);
-                    }
-                } else {
-                    if (t.getLeft().getBalance() > 0) {
-                        insbal = t.getLeft().getRight().getBalance();
-                        t.setLeft(rotateLeft(t.getLeft()));
-                        t = rotateRight(t);
-
-                        if (insbal == 0) {
-                            t.setBalance(0);
-                            t.getRight().setBalance(0);
-                            t.getLeft().setBalance(0);
-                        } else if (insbal == 1) {
-                            t.setBalance(0);
-                            t.getRight().setBalance(0);
-                            t.getLeft().setBalance(-1);
-                        } else if (insbal == -1) {
-                            t.setBalance(0);
-                            t.getLeft().setBalance(0);
-                            t.getRight().setBalance(1);
-                        }
-                    } else {
-                        t = rotateRight(t);
+        // Once node has been inserted and balance checked
+        // Checks to see if rotations are needed
+        if (t.getBalance() == 2 || t.getBalance() == -2) {
+            if (t.getBalance() == 2) { // right heavy case
+                if (t.getRight().getBalance() < 0) { //requires double rotation
+                    insbal = t.getRight().getLeft().getBalance();
+                    t.setRight(rotateRight(t.getRight()));
+                    t = rotateLeft(t);
+                    if (insbal == 0) { //equalized parent+Child
                         t.setBalance(0);
                         t.getRight().setBalance(0);
+                        t.getLeft().setBalance(0);
+                    } else if (insbal == 1) {
+                        t.setBalance(0);
+                        t.getRight().setBalance(0);
+                        t.getLeft().setBalance(-1);
+                    } else if (insbal == -1) {
+                        t.setBalance(0);
+                        t.getLeft().setBalance(0);
+                        t.getRight().setBalance(1);
                     }
+                } else { //normal left rotate
+                    t = rotateLeft(t);
+                    t.setBalance(0);
+                    t.getLeft().setBalance(0);
+                }
+            } else {
+                if (t.getLeft().getBalance() > 0) {
+                    insbal = t.getLeft().getRight().getBalance();
+                    t.setLeft(rotateLeft(t.getLeft()));
+                    t = rotateRight(t);
+
+                    if (insbal == 0) {
+                        t.setBalance(0);
+                        t.getRight().setBalance(0);
+                        t.getLeft().setBalance(0);
+                    } else if (insbal == 1) {
+                        t.setBalance(0);
+                        t.getRight().setBalance(0);
+                        t.getLeft().setBalance(-1);
+                    } else if (insbal == -1) {
+                        t.setBalance(0);
+                        t.getLeft().setBalance(0);
+                        t.getRight().setBalance(1);
+                    }
+                } else {
+                    t = rotateRight(t);
+                    t.setBalance(0);
+                    t.getRight().setBalance(0);
                 }
             }
+        }
         return t;
-    } 
-   
-   // end of rotations
-  // end of insert
-
-    public static String myName() {
-        return "Michael Merabi";
     }
+
 
     //Main method starts here ===========
     public static void main(String args[]){
@@ -411,7 +398,6 @@ class StringAVLTree {
                 ansct++;
             }
         } while (s.length() != 0);
-        System.out.println("Programmed by: " + StringAVLTree.myName());
     }
 }
 
